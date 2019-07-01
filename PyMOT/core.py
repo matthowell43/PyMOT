@@ -38,7 +38,7 @@ class Vehicle():
         self.clockedCheck = mileage_check(self)
         self.motExpiry = mot_validity(self.latestTest)
 
-        #pprint(activeVehicle)
+        pprint(activeVehicle)
 
         if self.clockedCheck is False:
             print('\nWarning: Mileage inconsistencies detected. This vehicle may have been clocked (odometer modification).\n'

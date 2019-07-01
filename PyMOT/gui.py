@@ -64,7 +64,7 @@ def start_main(key):
             [sg.Text('Odometer check'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (100,50)))]]
 
 
-        , title='Vehicle Information', title_color='red', relief=sg.RELIEF_SUNKEN)],
+        , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
 
         # Listbox / output
         [sg.Listbox(values=(''), size=(30, 15), key='_LIST_', enable_events=True),
@@ -139,9 +139,13 @@ def mot_dates(tests):
 
 
 def test_output(test):
-
+#todo add mileage from each test to output box
 
     commentstemp = test['rfrAndComments']
+
+    print("Recorded mileage for this MOT: " + test['odometerValue'] + "\n")
+
+
 
     if len(commentstemp) == 0:
         print('Good news! No advisories or faults on this test.')
