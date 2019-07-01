@@ -131,10 +131,6 @@ def mot_dates(tests):
                 temp = v
                 dates.append(temp)
 
-            #if k == 'testResult':
-             #   temp = temp + " - " + v
-
-
     return dates
 
 
@@ -155,7 +151,6 @@ def test_output(test):
         for resultsdict in commentstemp:
 
             count = 0
-            newfault = 1
 
             for key1, value1 in resultsdict.items():
                 temp = []
@@ -167,30 +162,13 @@ def test_output(test):
 
                 for value in temp:
                     count = count + 1
+
                     # print adaption
-                    #countprint = str(count)
                     print(value)
 
                 # line space after every comment/type set
                 if count & 2:
-                #    newfault = newfault + 1
-                 #   newfaultprint = str(newfault)
-
                     print("\n")
-                 #   print("Fault " + newfaultprint + ")")
-
-        #for i in value:
-         #   activeVehicle.update(i)
- #       for key2, value2 in value1.items():
- #           print(type(value1))
- #           print(key2)
- #           if key2 == 'type':
-  #              print("Type of fault: " + value2)
-#
-  #          if key2 == 'comment':
-  #              print("Comment: " + value2)
-
-
 
 
 def iterate_tests(target, tests):

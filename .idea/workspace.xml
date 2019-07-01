@@ -22,10 +22,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PyMOT/core.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
+            <state relative-caret-position="680">
               <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="8" />
               <folding>
                 <element signature="e#65#76#0" expanded="true" />
@@ -34,11 +34,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PyMOT/gui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2344">
-              <caret line="141" column="46" selection-start-line="141" selection-start-column="46" selection-end-line="141" selection-end-column="46" />
+            <state relative-caret-position="236">
+              <caret line="149" column="30" lean-forward="true" selection-start-line="149" selection-start-column="30" selection-end-line="149" selection-end-column="30" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -114,8 +114,8 @@
         <option value="$PROJECT_DIR$/../../DemoPrograms/Demo_Buttons_Nice_Graphics.py" />
         <option value="$PROJECT_DIR$/PyMOT/graphics.py" />
         <option value="$PROJECT_DIR$/PyMOT/apigui.py" />
-        <option value="$PROJECT_DIR$/PyMOT/gui.py" />
         <option value="$PROJECT_DIR$/PyMOT/core.py" />
+        <option value="$PROJECT_DIR$/PyMOT/gui.py" />
       </list>
     </option>
   </component>
@@ -292,12 +292,12 @@
       <workItem from="1561549994759" duration="2478000" />
       <workItem from="1561553312405" duration="3038000" />
       <workItem from="1561642829219" duration="24728000" />
-      <workItem from="1561889894211" duration="15857000" />
+      <workItem from="1561889894211" duration="16688000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62938000" />
+    <option name="totallyTimeSpent" value="63769000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -416,22 +416,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PyMOT/gui.py">
+    <entry file="file://$PROJECT_DIR$/PyMOT/core.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2344">
-          <caret line="141" column="46" selection-start-line="141" selection-start-column="46" selection-end-line="141" selection-end-column="46" />
+        <state relative-caret-position="680">
+          <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="8" />
           <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#65#76#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PyMOT/core.py">
+    <entry file="file://$PROJECT_DIR$/PyMOT/gui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="8" />
+        <state relative-caret-position="236">
+          <caret line="149" column="30" lean-forward="true" selection-start-line="149" selection-start-column="30" selection-end-line="149" selection-end-column="30" />
           <folding>
-            <element signature="e#65#76#0" expanded="true" />
+            <element signature="e#0#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
