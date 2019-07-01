@@ -1,4 +1,4 @@
-# PyMOT - a Python-based vehicle UK MOT checker
+# PyMOT - a Python-based vehicle MOT checker
 
 PyMOT is intended for UK car owners or prospective buyers who wish to examine a vehicle's MOT history in detail. It uses a DVSA (DVLA digital service) API key to pull vehicle data from the DVSA servers which is then processed by this application.
 
