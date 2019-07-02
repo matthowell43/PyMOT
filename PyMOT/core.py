@@ -19,32 +19,41 @@ class Vehicle():
 
     def __init__(self, value):
 
-        activeVehicle = {}
-        for i in value:
-           activeVehicle.update(i)
+        if value is None:
+            print('Invalid vehicle registration. Please try again.')
+            self.invalidReg = True
+            self.allTests = None
 
-        self.reg = activeVehicle.get('registration')
-        self.fuel = activeVehicle.get('fuelType')
-        self.make = activeVehicle.get('make')
-        self.model = activeVehicle.get('model')
-        self.colour = activeVehicle.get('primaryColour')
-
-        self.allTests = activeVehicle.get('motTests')
-        self.latestTest = next(iter(self.allTests))
-        self.latestResults = latest_results(self.latestTest)
-        self.latestMileage = latest_mileage(self)
-        self.firstUsedDate = get_first_used_date(activeVehicle)
-
-        self.clockedCheck = mileage_check(self)
-        self.motExpiry = mot_validity(self.latestTest)
-
-        pprint(activeVehicle)
-
-        if self.clockedCheck is False:
-            print('\nWarning: Mileage inconsistencies detected. This vehicle may have been clocked (odometer modification).\n'
-                  'If you intend to purchase this vehicle, please exercise caution.')
         else:
-            print('\nVehicle mileage is valid. No inconsistencies detected.\n')
+
+            activeVehicle = {}
+            for i in value:
+                activeVehicle.update(i)
+
+            self.reg = activeVehicle.get('registration')
+            self.fuel = activeVehicle.get('fuelType')
+            self.make = activeVehicle.get('make')
+            self.model = activeVehicle.get('model')
+            self.colour = activeVehicle.get('primaryColour')
+
+
+            if 'motTests' in activeVehicle.keys():
+
+                self.allTests = activeVehicle.get('motTests')
+                self.latestTest = next(iter(self.allTests))
+                self.latestResults = latest_results(self.latestTest)
+                self.latestMileage = latest_mileage(self)
+                self.firstUsedDate = get_first_used_date(activeVehicle)
+
+                self.clockedCheck = mileage_check(self)
+                self.motExpiry = mot_validity(self.latestTest)
+
+            pprint(activeVehicle)
+
+            if 'motTests' not in activeVehicle.keys():
+
+                print("\n No MOT's recorded for this vehicle\n")
+                self.allTests = None
 
 #TODO use PyQt5.uic.loadUiType() to load design.ui from PyQT5 directly
 
@@ -72,9 +81,6 @@ def api_send(api_key: object, reg: object) -> object:
 
         return value
 
-    else:
-        pprint("Key invalid, please try again")
-        #apigui.key_invalid()
 
 
 ## TODO Move all analysis methods to separate .py file

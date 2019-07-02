@@ -61,7 +61,7 @@ def start_main(key):
 
         [sg.Frame(layout=[
 
-            [sg.Text('Odometer check'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (100,50)))]]
+            [sg.Text('Odometer check'), sg.Button('Odometer OK', image_data=graphics.image_file_to_bytes(green_pill64, (100,50)), key='_ODOMETER_')]]
 
 
         , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
@@ -82,6 +82,8 @@ def start_main(key):
           break
 
         if event == 'Submit':
+
+
             window.FindElement('_OUTPUT_').Update('')
 
             registration = values['_REG_']
@@ -89,22 +91,57 @@ def start_main(key):
             vehicle = Vehicle(apidata)
             #pprint(vehicle.latestTest)
 
-            testdates = mot_dates(vehicle.allTests)
+            if vehicle.invalidReg == False:
+                window.Element('_MAKE_').Update(vehicle.make)
+                window.Element('_MODEL_').Update(vehicle.model)
+                window.Element('_FUELTYPE_').Update(vehicle.fuel)
+                window.Element('_COLOUR_').Update(vehicle.colour)
 
-            window.Element('_MAKE_').Update(vehicle.make)
-            window.Element('_MODEL_').Update(vehicle.model)
-            window.Element('_FUELTYPE_').Update(vehicle.fuel)
-            window.Element('_COLOUR_').Update(vehicle.colour)
 
-            # Second column in Vehicle information box
-            window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
-            window.Element('_RECMILES_').Update(vehicle.latestMileage)
-            window.Element('_FIRSTUSED_').Update(vehicle.firstUsedDate)
+            if vehicle.allTests is not None:
+                window.Element('_FIRSTUSED_').Update(vehicle.firstUsedDate)
+                testdates = mot_dates(vehicle.allTests)
+                window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
+                window.Element('_RECMILES_').Update(vehicle.latestMileage)
 
-            window.Element('_LIST_').Update(testdates)
+                window.Element('_LIST_').Update(testdates)
 
-            # update analysis results
-            #window.Element('_RESULTS_').Update(vehicle.latestResults)
+            # odometer check condition, defaults to green (True)
+                if vehicle.clockedCheck == False:
+                    window.Element('_ODOMETER_').Update('Odometer ALERT', image_data=graphics.image_file_to_bytes(red_pill64, (100, 50)))
+
+
+        # Details upon clicking Odometer check button
+        if event == 'Odometer ALERT':
+            window.FindElement('_OUTPUT_').Update('')
+            print('WARNING: Inconsistent odometer values have been detected.')
+            print("This *might* indicate that the vehicle's odometer has been modified. \n")
+
+            odometerlist = []
+            datelist = []
+            for test in vehicle.allTests:
+
+                for k, v in test.items():
+                    if k == 'completedDate':
+                        datelist.append(v)
+                    if k == 'odometerValue':
+                        odometerlist.append(v)
+
+            for date, odometer in datelist, odometerlist:
+                print('Date: ' + date + " - Mileage: " + odometer + "\n")
+
+
+        if event == 'Odometer OK':
+            for test in vehicle.allTests:
+
+                for k, v in test.items():
+                    if k == 'completedDate':
+                        datelist.append(v)
+                    if k == 'odometerValue':
+                        odometerlist.append(v)
+
+            for date, odometer in datelist, odometerlist:
+                print('Date: ' + date + " - Mileage: " + odometer + "\n")
 
 
         # Display listbox selection in table
