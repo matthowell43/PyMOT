@@ -19,6 +19,9 @@ class Vehicle():
 
     def __init__(self, value):
 
+        self.invalidReg = False
+        self.motExpiry = None
+
         if value is None:
             print('Invalid vehicle registration. Please try again.')
             self.invalidReg = True
@@ -36,17 +39,21 @@ class Vehicle():
             self.model = activeVehicle.get('model')
             self.colour = activeVehicle.get('primaryColour')
 
+            if 'motTestExpiryDate' in activeVehicle.keys():
+                self.latestMileage = activeVehicle.get('motTestExpiryDate')
+                print(self.latestMileage)
+
 
             if 'motTests' in activeVehicle.keys():
 
                 self.allTests = activeVehicle.get('motTests')
                 self.latestTest = next(iter(self.allTests))
                 self.latestResults = latest_results(self.latestTest)
-                self.latestMileage = latest_mileage(self)
                 self.firstUsedDate = get_first_used_date(activeVehicle)
 
                 self.clockedCheck = mileage_check(self)
-                self.motExpiry = mot_validity(self.latestTest)
+                self.motExpiry = mot_expiry(self.latestTest)
+                self.latestMileage = latest_mileage(self)
 
             pprint(activeVehicle)
 
@@ -133,19 +140,18 @@ def latest_results(veh):
     return results
 
 
-def mot_validity(veh):
+def mot_expiry(veh):
     currentDate = datetime.now()
 
     for k, v in veh.items():
+
+        if k == 'motTestExpiryDate':
+            date = datetime.strptime(v, '%Y.%m.%d')
+            return date
+
         if k == 'expiryDate':
             date = datetime.strptime(v, '%Y.%m.%d')
-
-            if currentDate < date:
-                #print('\n MOT is currently valid')
-                return date
-            else:
-                #print("\n MOT is not valid. This vehicle's latest MOT expired on" + v)
-                return date
+            return date
 
 # Methods to format test results for GUI display
 #fix
