@@ -61,7 +61,8 @@ def start_main(key):
 
         [sg.Frame(layout=[
 
-            [sg.Text('Odometer check'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (100,50)), key='_ODOMETEROK_')]]
+            [sg.Text('Odometer check'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (100,50)), key='_ODOMETER_'),
+             sg.Text('     Recurring faults'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (100,50)), key='_RECURRING_'),]]
 
 
         , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
@@ -108,47 +109,59 @@ def start_main(key):
             if vehicle.motExpiry is not None:
                 window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
 
+            if vehicle.recurringFaultsPresent == True:
+                window.Element('_RECURRING_').Update('ALERT',
+                                                    image_data=graphics.image_file_to_bytes(red_pill64, (100, 50)))
+
+            else:
+                window.Element('_RECURRING_').Update('OK',
+                                                     image_data=graphics.image_file_to_bytes(green_pill64, (100, 50)))
+
+
             # odometer check condition, defaults to green (True)
-                if vehicle.clockedCheck == False:
-                    window.Element('_ODOMETEROK_').Update('ALERT', image_data=graphics.image_file_to_bytes(red_pill64, (100, 50)),
-                                                          key='_ODOMETERALERT_')
+
 
 
         # Details upon clicking Odometer check button
-        if event == '_ODOMETERALERT_':
-            window.FindElement('_OUTPUT_').Update('')
-            print('WARNING: Inconsistent odometer values have been detected.')
-            print("This *might* indicate that the vehicle's odometer has been modified. \n")
+        if event == '_ODOMETER_':
 
-            odometerlist = []
-            datelist = []
-            for test in vehicle.allTests:
+            if vehicle.clockedCheck == False:
+                window.Element('_ODOMETER_').Update('ALERT',
+                                                      image_data=graphics.image_file_to_bytes(red_pill64, (100, 50)))
 
-                for k, v in test.items():
-                    if k == 'completedDate':
-                        datelist.append(v)
-                    if k == 'odometerValue':
-                        odometerlist.append(v)
+                window.FindElement('_OUTPUT_').Update('')
+                print('Odometer report: ALERT - Issues detected \n' )
+                print('WARNING: Inconsistent odometer values have been detected.')
+                print("This *might* indicate that the vehicle's odometer has been modified. \n")
 
-            for (date, odometer) in zip(datelist, odometerlist):
-                print('Date: ' + date + " - Mileage: " + odometer + "\n")
+                odometerlist = []
+                datelist = []
+                for test in vehicle.allTests:
 
+                    for k, v in test.items():
+                        if k == 'completedDate':
+                            datelist.append(v)
+                        if k == 'odometerValue':
+                            odometerlist.append(v)
 
-        if event == '_ODOMETEROK_':
-            window.FindElement('_OUTPUT_').Update('')
-            odometerlist = []
-            datelist = []
-            for test in vehicle.allTests:
+                for (date, odometer) in zip(datelist, odometerlist):
+                    print('Date: ' + date + " - Mileage: " + odometer + "\n")
 
-                for k, v in test.items():
-                    if k == 'completedDate':
-                        datelist.append(v)
-                    if k == 'odometerValue':
-                        odometerlist.append(v)
+            else:
+                window.FindElement('_OUTPUT_').Update('')
+                odometerlist = []
+                datelist = []
+                print("Odometer report: No issues detected\n")
+                for test in vehicle.allTests:
 
-            for (date, odometer) in zip(datelist, odometerlist):
-                print('Date: ' + date + " - Mileage: " + odometer + "\n")
+                    for k, v in test.items():
+                        if k == 'completedDate':
+                            datelist.append(v)
+                        if k == 'odometerValue':
+                            odometerlist.append(v)
 
+                for (date, odometer) in zip(datelist, odometerlist):
+                    print('Date: ' + date + " - Mileage: " + odometer + "\n")
 
         # Display listbox selection in table
         if event == '_LIST_' and len(values['_LIST_']):
@@ -163,6 +176,7 @@ def start_main(key):
           #  window.Element('_RESULTS_').Update(output)
 
 
+        #if event == '_RECURRING_':
 
 
 def mot_dates(tests):
@@ -175,7 +189,6 @@ def mot_dates(tests):
                 dates.append(temp)
 
     return dates
-
 
 def test_output(test):
 #todo add mileage from each test to output box

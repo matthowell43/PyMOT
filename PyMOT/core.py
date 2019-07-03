@@ -1,26 +1,20 @@
-# Version 0.3.0, created by Matt Howell. Licensed under GPL 3.0
+# PyMOT - version 0.4.0, created by Matt Howell. Licensed under GPL 3.0. All rights reserved.
 
-import json
 import requests
-import os
 from pprint import pprint
 from datetime import datetime
 import test
-from PyMOT import apigui
-from PyMOT import gui
-
-#import apigui
 
 # Object creation using a specified index from list, and runs mileage_check method
 
+
 class Vehicle():
-    # placeholder
-    kind = 'car'
 
     def __init__(self, value):
 
         self.invalidReg = False
         self.motExpiry = None
+        self.recurringFaultsPresent = False
 
         if value is None:
             print('Invalid vehicle registration. Please try again.')
@@ -39,10 +33,10 @@ class Vehicle():
             self.model = activeVehicle.get('model')
             self.colour = activeVehicle.get('primaryColour')
 
+            # todo fix - not displaying in gui
             if 'motTestExpiryDate' in activeVehicle.keys():
                 self.latestMileage = activeVehicle.get('motTestExpiryDate')
                 print(self.latestMileage)
-
 
             if 'motTests' in activeVehicle.keys():
 
@@ -55,22 +49,28 @@ class Vehicle():
                 self.motExpiry = mot_expiry(self.latestTest)
                 self.latestMileage = latest_mileage(self)
 
-            pprint(activeVehicle)
-
             if 'motTests' not in activeVehicle.keys():
 
                 print("\n No MOT's recorded for this vehicle\n")
                 self.allTests = None
 
-#TODO use PyQt5.uic.loadUiType() to load design.ui from PyQT5 directly
+            self.recurringFaults = recurring_fault_check(self.allTests)
 
-#
+            if len(self.recurringFaults) > 0:
+                self.recurringFaultsPresent = True
 
 
 
 
-## TODO Complete later. If it exists, import any saved vehicles from saved_vehicles.csv
-#if os.path.exists('data\saved_vehicles.csv'):
+
+            #tests
+
+            # pprint(activeVehicle)
+            #self.clockedCheck = False
+
+
+# TODO Complete later. If it exists, import any saved vehicles from saved_vehicles.csv
+# if os.path.exists('data\saved_vehicles.csv'):
 
 def api_send(api_key: object, reg: object) -> object:
     #print(reg)
@@ -88,31 +88,6 @@ def api_send(api_key: object, reg: object) -> object:
 
         return value
 
-
-
-## TODO Move all analysis methods to separate .py file
-
-def mileage_check(veh):
-    # test values
-    #odometerValues = [102000, 99000, 81000, 91000, 83000, 70000]
-
-    odometerValues = []
-
-    for test in veh.allTests:
-        for k, v in test.items():
-            if k == 'odometerValue':
-                odometerValues.append(v)
-
-    # Convert string values to integers
-    for i in range(len(odometerValues)):
-        odometerValues[i] = int(odometerValues[i])
-
-    # Check if odometer values are only in descending order
-    for x in range(len(odometerValues) - 1):
-        if odometerValues[x] - odometerValues[x + 1] < 0:
-            return False
-    return True
-
 def latest_mileage(veh):
     # latest MOT is always first
     for test in veh.allTests:
@@ -120,25 +95,24 @@ def latest_mileage(veh):
             if k == 'odometerValue':
                 return v
 
-
 def get_first_used_date(veh):
 
     for k, v in veh.items():
         if k == 'firstUsedDate':
             return v
 
-def latest_results(veh):
+def latest_results(tests):
 
     results = []
 
-    for k, v in veh.items():
-        if k == 'testResult':
-            results.append(v)
-        if k == 'rfrAndComments':
-            results.append(v)
+    for k, v in tests.items():
+
+            if k == 'testResult':
+                results.append(v)
+            if k == 'rfrAndComments':
+                results.append(v)
 
     return results
-
 
 def mot_expiry(veh):
     currentDate = datetime.now()
@@ -163,6 +137,60 @@ def latestresults_format(comments):
         formatted_comments.append(temp_text)
 
         return formatted_comments
+
+# ---------------------------------------------------------
+## TODO Move all analysis methods to separate .py file
+def mileage_check(veh):
+    # test values
+    #odometerValues = [102000, 99000, 81000, 91000, 83000, 70000]
+
+    odometerValues = []
+
+    for test in veh.allTests:
+        for k, v in test.items():
+            if k == 'odometerValue':
+                odometerValues.append(v)
+
+    # Convert string values to integers
+    for i in range(len(odometerValues)):
+        odometerValues[i] = int(odometerValues[i])
+
+    # Check if odometer values are only in descending order
+    for x in range(len(odometerValues) - 1):
+        if odometerValues[x] - odometerValues[x + 1] < 0:
+            return False
+    return True
+
+
+# WIP
+def recurring_fault_check(tests):
+
+    last_test = None
+    last_value = None
+    oil_leak = False
+    results = []
+
+    for test in tests:
+        commentstemp = test['rfrAndComments']
+
+        for dict in commentstemp:
+
+            for k, v in dict.items():
+
+                if k == 'text':
+                    if "oil leak" in v and last_value:
+                        results.append("Recurring oil leak detected in MOT's from :" + str(test['completedDate'])
+                                   + " and " + str(last_test['completedDate']))
+
+            last_value = v
+        last_test = test
+
+
+    return results
+
+
+
+
 
 
 # Tests
