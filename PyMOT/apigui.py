@@ -10,7 +10,8 @@ layout = [[sg.Text('Select DVSA API key file')],
            [sg.Submit(), sg.Cancel()]]
 
 #
-(event, (values)) = sg.Window('DVSA API key', layout).Read()
+window = sg.Window('DVSA API key', layout)
+(event, (values)) = window.Read()
 keyfile = values[0]
 
 
@@ -23,8 +24,9 @@ while True:
 
   if event == 'Submit':
         gui.start_main(keyfile)
+        break
 
-
+window.Close()
 
 ## TODO add API verification here, prompt for new key if non-functional
 

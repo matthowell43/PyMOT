@@ -26,19 +26,15 @@ def start_main(key):
                ['Help', 'About...'], ]
 
 # ------ Column Definition ------ #
-    column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
-                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
-                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
-                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
 
     window = sg.Window('PyMOT 0.4.0', [
         [sg.Menu(menu_def, tearoff=True)],
         #sg.Frame(layout=[
          #   [sg.Text('MOT Validity'), title = 'MOT Information', title_color = 'red', relief = sg.RELIEF_SUNKEN]]),
 
-    # Reg input
+        # Reg input
         [sg.Text('Vehicle registration (e.g ZZ58 ABC)')],
-        [sg.InputText('', key='_REG_', size=(18, 1), focus=True, tooltip='Enter vehicle registration here'), sg.Button('Submit', bind_return_key=True), sg.Button('Exit')],
+        [sg.InputText('', key='_REG_', size=(18, 1), focus=True, tooltip='Enter vehicle registration here'), sg.Button('Submit', bind_return_key=True), sg.Button('Exit', key='_EXIT_')],
         [sg.Text('_' * 80)],
 
         [sg.Frame(layout=[
@@ -78,8 +74,7 @@ def start_main(key):
         event, values = window.Read()
         #window.Element('_OUTPUT_').Update('Welcome to PyMOT, a Python-based MOT history analysis tool. Results from your selected MOT will appear here.')
 
-        if event is None or event == 'Exit':
-          window.Close()
+        if event in (None, '_EXIT_'):
           break
 
         if event == 'Submit':
@@ -178,6 +173,7 @@ def start_main(key):
 
         #if event == '_RECURRING_':
 
+    window.Close()
 
 def mot_dates(tests):
 
