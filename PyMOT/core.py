@@ -58,10 +58,6 @@ class Vehicle():
             if len(self.recurringFaults) > 0:
                 self.recurringFaultsPresent = True
 
-
-
-
-
             #tests
 
             # pprint(activeVehicle)
@@ -157,7 +153,9 @@ def mileage_check(veh):
     for x in range(len(odometerValues) - 1):
         if odometerValues[x] - odometerValues[x + 1] < 0:
             return False
-    return True
+
+        else:
+            return True
 
 
 # WIP

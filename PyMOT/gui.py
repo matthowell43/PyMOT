@@ -1,3 +1,5 @@
+# Implemented through use of PySimpleGUI module which is licensed under LGPL v3.
+
 import PySimpleGUI as sg
 
 from pprint import pprint
@@ -7,13 +9,8 @@ import graphics
 from graphics import green_pill64
 from graphics import red_pill64
 
-
-
+# Window theme
 sg.ChangeLookAndFeel('GreenTan')
-
-
-
-
 
 def start_main(key):
 
@@ -28,7 +25,7 @@ def start_main(key):
 # ------ Window Definition ------ #
     # todo find out if there's a more reliable way of aligning elements for this section (might be limitation of PySimpleGUI)
 
-    window = sg.Window('PyMOT 0.4.0', [
+    window = sg.Window('PyMOT 0.4.1', [
         [sg.Menu(menu_def, tearoff=True)],
 
         # Reg input
@@ -74,9 +71,12 @@ def start_main(key):
         if event == 'Submit':
             window.FindElement('_OUTPUT_').Update('')
 
+
             registration = values['_REG_']
             apidata = api_send(apikey, registration)
             vehicle = Vehicle(apidata)
+
+            print(vehicle.clockedCheck)
 
             if vehicle.invalidReg == False:
                 window.Element('_MAKE_').Update(vehicle.make)
@@ -102,6 +102,10 @@ def start_main(key):
                 window.Element('_RECURRING_').Update('OK',
                                                      image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)))
 
+            if vehicle.clockedCheck == False:
+                window.Element('_ODOMETER_').Update('Alert',
+                                                      image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
+
 
         # Details upon clicking Odometer check button
         if event == '_ODOMETER_':
@@ -111,6 +115,7 @@ def start_main(key):
                                                       image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
 
                 window.FindElement('_OUTPUT_').Update('')
+
                 print('Odometer report: ALERT - Issues detected \n' )
                 print('WARNING: Inconsistent odometer values have been detected.')
                 print("This *might* indicate that the vehicle's odometer has been modified. \n")
@@ -144,20 +149,15 @@ def start_main(key):
                 for (date, odometer) in zip(datelist, odometerlist):
                     print('Date: ' + date + " - Mileage: " + odometer + "\n")
 
-        # Display listbox selection in table
+        # Display listbox selection in output box
         if event == '_LIST_' and len(values['_LIST_']):
             window.FindElement('_OUTPUT_').Update('')
-
             value = values['_LIST_']
             value = value[0]
 
             selected = iterate_tests(value, vehicle.allTests)
-          #  pprint(selected)
             test_output(selected)
-          #  window.Element('_RESULTS_').Update(output)
 
-
-        #if event == '_RECURRING_':
 
     window.Close()
 
@@ -179,13 +179,10 @@ def test_output(test):
 
     print("Recorded mileage for this MOT: " + test['odometerValue'] + "\n")
 
-
-
     if len(commentstemp) == 0:
         print('Good news! No advisories or faults on this test.')
 
     else:
-
         for resultsdict in commentstemp:
 
             count = 0
@@ -216,6 +213,5 @@ def iterate_tests(target, tests):
             if k == 'completedDate':
                 if v == target:
 
-                    #
                     return test
 
