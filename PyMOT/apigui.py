@@ -5,11 +5,9 @@ import PyMOT.gui as gui
 
 # Key file popup
 layout = [[sg.Text('Select DVSA API key file')],
-          # todo remove default text below before upload
-           [sg.InputText('C:/Users/Matt/Documents/mot_api.txt'), sg.FileBrowse(file_types=(("TXT Files (.txt)", "*.txt"),))],
+          [sg.InputText('C:/Users/Matt/Documents/mot_api.txt'), sg.FileBrowse(file_types=(("TXT Files (.txt)", "*.txt"),))],
            [sg.Submit(), sg.Cancel()]]
 
-#
 window = sg.Window('DVSA API key', layout)
 (event, (values)) = window.Read()
 keyfile = values[0]

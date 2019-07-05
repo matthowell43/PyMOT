@@ -1,4 +1,4 @@
-# PyMOT - version 0.4.0, created by Matt Howell. Licensed under GPL 3.0. All rights reserved.
+# PyMOT - version 0.4.1, created by Matt Howell. Licensed under GPL 3.0. All rights reserved.
 
 import requests
 from pprint import pprint
@@ -33,7 +33,6 @@ class Vehicle():
             self.model = activeVehicle.get('model')
             self.colour = activeVehicle.get('primaryColour')
 
-            # todo fix - not displaying in gui
             if 'motTestExpiryDate' in activeVehicle.keys():
                 self.latestMileage = activeVehicle.get('motTestExpiryDate')
                 print(self.latestMileage)
@@ -66,14 +65,13 @@ class Vehicle():
             #tests
 
             # pprint(activeVehicle)
-            #self.clockedCheck = False
+            #self.clockedCheck = True
 
 
 # TODO Complete later. If it exists, import any saved vehicles from saved_vehicles.csv
 # if os.path.exists('data\saved_vehicles.csv'):
 
 def api_send(api_key: object, reg: object) -> object:
-    #print(reg)
     api_url_base = 'https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests/?registration='
     headers = {'Content-type': 'application/json', 'x-api-key': '{0}'.format(api_key)}
 
@@ -188,45 +186,3 @@ def recurring_fault_check(tests):
 
     return results
 
-
-
-
-
-
-# Tests
-
-#test.structureTest()
-
-# Old code from CLI
-
-# Method to get API key from user if file not found
-
-# UNUSED in GUI version
-#def get_api_key():
-#    choice = input('\nAPI key not found.\n\nOptions:\n'
-#                   '1) Enter API key\n'
-#                   '2) Specify API key filename\n'
-#                  'Selection: ')
-#    if choice == '1':
-#        key = input('Please enter API key: ')
-#        return key
-#    if choice == '2':
-#        fileloc = input('Please specify API file location relative to application root\n'
-#                         ' Example: "data\mot_api.txt"\n')
-#        with open(fileloc) as key:
-#            key = key.read()
-#            return key
-#    if '1' or '2' not in choice:
-#       print('\nInvalid selection, please try again')
-#        get_api_key()
-
-
-# Import DVSA MOT API key from text file, if file not present uses get_api_key()
-# to get API key from user
-#api_key = None
-
-#if os.path.exists('data/mot_api.txt'):
-#    with open('data/mot_api.txt') as key:
-#        api_key = key.read()
-#if api_key is None:
-#    api_key = get_api_key()
