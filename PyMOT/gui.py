@@ -60,7 +60,6 @@ def start_main(key):
          sg.Output(key='_OUTPUT_')]])
 
 
-
     # Event Loop
     while True:
         event, values = window.Read()
@@ -158,7 +157,6 @@ def start_main(key):
             selected = iterate_tests(value, vehicle.allTests)
             test_output(selected)
 
-
     window.Close()
 
 def mot_dates(tests):
@@ -172,8 +170,8 @@ def mot_dates(tests):
 
     return dates
 
+
 def test_output(test):
-#todo add mileage from each test to output box
 
     commentstemp = test['rfrAndComments']
 
@@ -197,7 +195,6 @@ def test_output(test):
 
                 for value in temp:
                     count = count + 1
-
                     # print adaption
                     print(value)
 
@@ -210,8 +207,6 @@ def iterate_tests(target, tests):
 
     for test in tests:
         for k, v in test.items():
-            if k == 'completedDate':
-                if v == target:
-
-                    return test
+            if k == 'completedDate' and v == target:
+                return test
 

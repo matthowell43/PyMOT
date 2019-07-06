@@ -1,4 +1,3 @@
-import PyMOT.core as core
 import PySimpleGUI as sg
 from pprint import pprint
 import PyMOT.gui as gui
@@ -15,12 +14,10 @@ keyfile = values[0]
 
 # Event Loop
 while True:
-  if event is None or event == 'Exit':
-      # TODO fix program close, currently reopens itself
-      #window.Close()
-      break
+    if event is None or event == 'Exit':
+        break
 
-  if event == 'Submit':
+    if event == 'Submit':
         gui.start_main(keyfile)
         break
 
@@ -36,18 +33,3 @@ window.Close()
 #
 #    (event, (keyfile,)) = sg.Window('DVSA API key', layout).Read()
 #    window.Close()
-
-
-# Main window
-
-#layout = [[sg.Text('Vehicle registration:'), sg.Text('', key='_REG_')],
-#          [sg.Input(do_not_clear=True, key='_IN_')],
-#          [sg.Button('Submit'), sg.Button('Exit')]]
-#
-#window = sg.Window('PyMOT', layout)
-
-
-
-
-
-#core.api_send()

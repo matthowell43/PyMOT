@@ -1,5 +1,7 @@
 # Tests for PyMOT 0.2
 
+#todo update for 0.5.0
+
 
 def structure_test():
 
@@ -17,7 +19,7 @@ def structure_test():
     print('Latest MOT')
     pprint(vehObj.latestTest)
 
-    print('\n\n ***For loop test, uses my car***')
+
 
     for test in vehObj.allTests:
         for x in test.values():

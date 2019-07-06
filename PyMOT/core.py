@@ -3,7 +3,6 @@
 import requests
 from pprint import pprint
 from datetime import datetime
-import test
 
 # Object creation using a specified index from list, and runs mileage_check method
 
@@ -59,13 +58,11 @@ class Vehicle():
                 self.recurringFaultsPresent = True
 
             #tests
-
             # pprint(activeVehicle)
             #self.clockedCheck = True
 
 
-# TODO Complete later. If it exists, import any saved vehicles from saved_vehicles.csv
-# if os.path.exists('data\saved_vehicles.csv'):
+# TODO Complete later: If it exists, import any saved vehicles from saved_vehicles.csv
 
 def api_send(api_key: object, reg: object) -> object:
     api_url_base = 'https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests/?registration='
@@ -170,7 +167,6 @@ def recurring_fault_check(tests):
         commentstemp = test['rfrAndComments']
 
         for dict in commentstemp:
-
             for k, v in dict.items():
 
                 if k == 'text':
@@ -180,7 +176,6 @@ def recurring_fault_check(tests):
 
             last_value = v
         last_test = test
-
 
     return results
 
