@@ -2,26 +2,33 @@ import PySimpleGUI as sg
 from pprint import pprint
 import PyMOT.gui as gui
 
-# Key file popup
-layout = [[sg.Text('Select DVSA API key file')],
-          [sg.InputText('C:/Users/Matt/Documents/mot_api.txt'), sg.FileBrowse(file_types=(("TXT Files (.txt)", "*.txt"),))],
-           [sg.Submit(), sg.Cancel()]]
+# Icon made by itim2101 on www.flaticon.com (https://www.flaticon.com/free-icon/maintenance_1967734)
 
-window = sg.Window('DVSA API key', layout)
-(event, (values)) = window.Read()
-keyfile = values[0]
+def start_api_gui():
+
+    # Key file popup
+    layout = [[sg.Text('Select DVSA API key file')],
+              [sg.InputText('C:/Users/Matt/Documents/mot_api.txt'), sg.FileBrowse(file_types=(("TXT Files (.txt)", "*.txt"),))],
+               [sg.Submit(), sg.Cancel()]]
+
+    window = sg.Window('DVSA API key', layout)
+    (event, (values)) = window.Read()
+    keyfile = values[0]
 
 
-# Event Loop
-while True:
-    if event is None or event == 'Exit':
-        break
+    # Event Loop
+    while True:
+        if event is None or event == 'Exit':
+            break
 
-    if event == 'Submit':
-        gui.start_main(keyfile)
-        break
+        if event == 'Submit':
+            gui.start_main(keyfile)
+            break
 
-window.Close()
+    window.Close()
+
+
+start_api_gui()
 
 ## TODO add API verification here, prompt for new key if non-functional
 

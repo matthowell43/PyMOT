@@ -1,4 +1,5 @@
-# Implemented through use of PySimpleGUI module which is licensed under LGPL v3.
+# Powered by PySimpleGUI module which is licensed under LGPL v3.
+# Icon made by itim2101 on www.flaticon.com (https://www.flaticon.com/free-icon/maintenance_1967734)
 
 import PySimpleGUI as sg
 

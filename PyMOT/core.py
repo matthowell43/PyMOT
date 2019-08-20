@@ -4,7 +4,8 @@ import requests
 from pprint import pprint
 from datetime import datetime
 
-# Object creation using a specified index from list, and runs mileage_check method
+# Object creation- utilises data acquired from the MOT API to populate a Vehicle object with all relevant data.
+# Invokes numerous other methods.
 
 
 class Vehicle():
