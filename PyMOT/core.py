@@ -4,6 +4,9 @@ import requests
 from pprint import pprint
 from datetime import datetime
 
+import PyMOT.analysis as analysis
+
+
 # Object creation- utilises data acquired from the MOT API to populate a Vehicle object with all relevant data.
 # Invokes numerous other methods.
 
@@ -11,7 +14,6 @@ from datetime import datetime
 class Vehicle():
 
     def __init__(self, value):
-
         self.invalidReg = False
         self.motExpiry = None
         self.recurringFaultsPresent = False

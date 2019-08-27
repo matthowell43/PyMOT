@@ -9,6 +9,7 @@ from core import Vehicle
 import graphics
 from graphics import green_pill64
 from graphics import red_pill64
+from analysis import FaultScanner
 
 # Window theme
 sg.ChangeLookAndFeel('GreenTan')
@@ -76,7 +77,8 @@ def start_main(key):
             apidata = api_send(apikey, registration)
             vehicle = Vehicle(apidata)
 
-            print(vehicle.clockedCheck)
+
+
 
             if vehicle.invalidReg == False:
                 window.Element('_MAKE_').Update(vehicle.make)
@@ -106,6 +108,15 @@ def start_main(key):
                 window.Element('_ODOMETER_').Update('Alert',
                                                       image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
 
+            # FaultScanner implementation via popup
+            scanner = FaultScanner()
+            ## TODO add button in gui
+            sg.Popup('Vehicle Report PLACEHOLDER - WIP', '',
+                     'Total Brake faults detected: ' + str(scanner.brakeFaultsTotal),
+                     '----- Brake faults in latest MOT: ' + str(scanner.brakeFaultsLatest),
+                     '',
+                     'Total Suspension faults detected: ' + str(scanner.suspensionFaultsTotal),
+                     '----- Suspension faults in latest MOT: ' + str(scanner.suspensionFaultsLatest))
 
         # Details upon clicking Odometer check button
         if event == '_ODOMETER_':
@@ -156,6 +167,7 @@ def start_main(key):
             value = value[0]
 
             selected = iterate_tests(value, vehicle.allTests)
+
             test_output(selected)
 
     window.Close()
