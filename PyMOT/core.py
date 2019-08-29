@@ -50,8 +50,9 @@ class Vehicle():
                 self.motExpiry = mot_expiry(self.latestTest)
                 self.latestMileage = latest_mileage(self)
 
-            if 'motTests' not in activeVehicle.keys():
 
+
+            if 'motTests' not in activeVehicle.keys():
                 print("\n No MOT's recorded for this vehicle\n")
                 self.allTests = None
 
@@ -65,7 +66,12 @@ class Vehicle():
             #self.clockedCheck = True
 
 
+
+
+
 # TODO Complete later: If it exists, import any saved vehicles from saved_vehicles.csv
+
+
 
 def api_send(api_key: object, reg: object) -> object:
     api_url_base = 'https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests/?registration='
@@ -95,11 +101,11 @@ def get_first_used_date(veh):
         if k == 'firstUsedDate':
             return v
 
-def latest_results(tests):
+def latest_results(test):
 
     results = []
 
-    for k, v in tests.items():
+    for k, v in test.items():
 
             if k == 'testResult':
                 results.append(v)

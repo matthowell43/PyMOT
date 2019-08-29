@@ -6,10 +6,11 @@ import PySimpleGUI as sg
 from pprint import pprint
 from core import api_send
 from core import Vehicle
+
 import graphics
 from graphics import green_pill64
 from graphics import red_pill64
-from analysis import FaultScanner
+import PyMOT.analysis as analysis
 
 # Window theme
 sg.ChangeLookAndFeel('GreenTan')
@@ -93,6 +94,10 @@ def start_main(key):
 
                 window.Element('_LIST_').Update(testdates)
 
+                # FaultScanner test
+
+                scanner = analysis.FaultScanner(vehicle.allTests)
+
             if vehicle.motExpiry is not None:
                 window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
 
@@ -109,7 +114,7 @@ def start_main(key):
                                                       image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
 
             # FaultScanner implementation via popup
-            scanner = FaultScanner()
+
             ## TODO add button in gui
             sg.Popup('Vehicle Report PLACEHOLDER - WIP', '',
                      'Total Brake faults detected: ' + str(scanner.brakeFaultsTotal),
