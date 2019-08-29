@@ -8,3 +8,7 @@ PyMOT\data
 .idea\
 
 .idea/
+
+build
+
+venv
