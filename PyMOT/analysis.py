@@ -9,9 +9,11 @@ class FaultScanner():
     def __init__(self, tests):
 
         if tests is not None:
+            self.faultDictList = []
+
             # comments to be scanned
-            self.historicComments = []
-            self.latestComments = []
+            self.historicComments = {}
+            self.latestComments = {}
 
             # Brake fault data
             self.latest_brake_faults = []
@@ -46,46 +48,60 @@ class FaultScanner():
 
             # extracts comments from tests
 
-            self.comments = tests.get('rfrAndComments')
+            self.latestCommentsRetrieved = False
+            self.comments = []
+
             for test in tests:
-                self.comments.update(test.get('rfrAndComments'))
+                self.comments.append(test)
+            #print(type(self.comments))
+           # print("TEST COMMENTS CONTENTS \n")
+           # print(self.comments)
+
+            #self.brake_fault_scanner()
+
+    # regex alternative implementation
+    def fault_scanner_regex(self):
+        
+
+    def brake_fault_scanner(self):
+        #return
+
+        fault_dict_list = []
+
+        # iterating through list of dicts
+        for comment in self.comments:
+            fault_dict = {}
+            fault_detected = False
+            comment_list_temp = []
+
+            for k, v in comment.items():
+
+                if k == 'text':
+
+                    # splits the comment sentence into words to be checked individually
+                    for comment_word in v.split():
+                        # brake check
+                        for term in self.brakeFaultTerms:
+                            brake_faults = []
+
+                            if term.lower() == comment_word.lower() and "brake".lower() in v:
+                                print("Brake fault identified: " + comment + "\nTerm found: " + comment_word)
+                                self.brake_fault_count = self.brake_fault_count + 1
+                                brake_faults.append(v)
+                                fault_detected = True
+
+                        # suspension check
+                        # todo enable after term dictionary and variables created
+                        #for term in self.suspensionFaultTerms:
+
+                if k == 'completedDate' and fault_detected:
+                    fault_dict['completedDate'] = v
+
+                # appends the temp dict to the final list- final part of method
+                # end result being a list of dicts organised by test date, each one having a list of faults
+                if fault_dict is not None:
+                    self.faultDictList.append(fault_dict.copy())
 
 
-            for k, v in self.comments:
-                if k = 'text':
-                    self.allComments.append(v)
-
-            self.brake_fault_scanner(self.allComments)
-
-    def brake_fault_scanner(self, comments):
-
-        comment_strings = []
-        # takes first comment to be examined separately
-        latest_comments = comments.pop(0)
-        for comment in comments:
 
 
-
-
-
-
-
-
-
-            #for comment_word in comment.split():
-           #     for term in self.brakeFaultTerms:
-           #         if term.lower() == comment_word.lower():
-           #             print("Brake fault identified: " + comment + "\nTerm found: " + comment_word)
-           #             self.brake_fault_count = self.brake_fault_count + 1
-           #             self.historic_brake_faults.append(comment)
-
-        # first need to ensure the braking system is mentioned in the comment
-
-        # use regex to find brake fault comments, then added unaltered to corresponding lists.
-
-
-        # separate block for latest test scan
-       # latest_test = latest_results(tests[0])
-
-        # todo assign these variables directly to FaultScanner vars instead of return
-        # returns two lists: one for the latest MOT alone, and the other containing everything except the latest.

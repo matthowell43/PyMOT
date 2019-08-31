@@ -40,8 +40,10 @@ class Vehicle():
                 print(self.latestMileage)
 
             if 'motTests' in activeVehicle.keys():
+                self.allTests = activeVehicle['motTests']
+                #print(type(self.allTests))
+                #print(self.allTests)
 
-                self.allTests = activeVehicle.get('motTests')
                 self.latestTest = next(iter(self.allTests))
                 self.latestResults = latest_results(self.latestTest)
                 self.firstUsedDate = get_first_used_date(activeVehicle)
@@ -49,8 +51,8 @@ class Vehicle():
                 self.clockedCheck = mileage_check(self)
                 self.motExpiry = mot_expiry(self.latestTest)
                 self.latestMileage = latest_mileage(self)
-
-
+                # analysis.py FaultScanner
+                self.faultScanner = analysis.FaultScanner(self.allTests)
 
             if 'motTests' not in activeVehicle.keys():
                 print("\n No MOT's recorded for this vehicle\n")
@@ -64,10 +66,6 @@ class Vehicle():
             #tests
             # pprint(activeVehicle)
             #self.clockedCheck = True
-
-
-
-
 
 # TODO Complete later: If it exists, import any saved vehicles from saved_vehicles.csv
 

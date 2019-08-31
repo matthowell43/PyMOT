@@ -95,8 +95,12 @@ def start_main(key):
                 window.Element('_LIST_').Update(testdates)
 
                 # FaultScanner test
+                # todo fix
 
-                scanner = analysis.FaultScanner(vehicle.allTests)
+                if vehicle.faultScanner.faultDictList is None:
+                    print("No faults detected by FaultScanner !")
+
+                print(vehicle.faultScanner.faultDictList)
 
             if vehicle.motExpiry is not None:
                 window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
@@ -116,12 +120,12 @@ def start_main(key):
             # FaultScanner implementation via popup
 
             ## TODO add button in gui
-            sg.Popup('Vehicle Report PLACEHOLDER - WIP', '',
-                     'Total Brake faults detected: ' + str(scanner.brakeFaultsTotal),
-                     '----- Brake faults in latest MOT: ' + str(scanner.brakeFaultsLatest),
-                     '',
-                     'Total Suspension faults detected: ' + str(scanner.suspensionFaultsTotal),
-                     '----- Suspension faults in latest MOT: ' + str(scanner.suspensionFaultsLatest))
+            #sg.Popup('Vehicle Report PLACEHOLDER - WIP', '',
+            #         'Total Brake faults detected: ' + str(scanner.brakeFaultsTotal),
+             #        '----- Brake faults in latest MOT: ' + str(scanner.brakeFaultsLatest),
+             #        '',
+             #        'Total Suspension faults detected: ' + str(scanner.suspensionFaultsTotal),
+             #        '----- Suspension faults in latest MOT: ' + str(scanner.suspensionFaultsLatest))
 
         # Details upon clicking Odometer check button
         if event == '_ODOMETER_':
