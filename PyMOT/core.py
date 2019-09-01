@@ -51,7 +51,8 @@ class Vehicle():
                 self.clockedCheck = mileage_check(self)
                 self.motExpiry = mot_expiry(self.latestTest)
                 self.latestMileage = latest_mileage(self)
-                # analysis.py FaultScanner
+
+                # analysis.py  ** FaultScanner activation **
                 self.faultScanner = analysis.FaultScanner(self.allTests)
 
             if 'motTests' not in activeVehicle.keys():

@@ -4,12 +4,17 @@ from PyMOT.core import latest_results
 
 import re
 
+from pprint import pprint
+
+
 class FaultScanner():
 
     def __init__(self, tests):
 
         if tests is not None:
-            self.faultDictList = []
+
+            self.brakeTermsDetected = set()
+            self.brakeFaultsDetected = []
 
             # comments to be scanned
             self.historicComments = {}
@@ -29,9 +34,9 @@ class FaultScanner():
             # various lists with fault descriptions that PyMOT tries to locate
             # regex searches on these lists will not be case-sensitive
             self.faultLocationTerms = ['nearside', 'near-side', 'offside', 'off-side', 'front', 'rear', 'o/s', 'n/s', 'os', 'ns']
-            self.brakeFaultTerms = ['brake', 'brakes', 'disc', 'discs', 'brake pad', ' brake pads', 'brake pad(s)',
-                                     'handbrake', 'hand-brake', 'parking brake', 'brake pipe', 'brake pipes', 'brake pipe(s)',
-                                     'brake hose']
+            self.brakeFaultTerms = ['disc', 'discs', 'pad', ' pads', 'pad(s)',
+                                     'handbrake', 'hand-brake', 'parking', 'pipe', 'pipes', 'pipe(s)',
+                                     'hose', 'cable']
             # brake system damage terms
             self.brakeDamageTerms = ['pitted', 'scored', 'weakened', 'wearing thin', 'binding', 'twisted', 'deteriorated',
                                      'imbalanced', 'lipped', '1.5mm', '1.5 mm', 'thin', 'fluctuating', 'juddering']
@@ -49,19 +54,57 @@ class FaultScanner():
             # extracts comments from tests
 
             self.latestCommentsRetrieved = False
-            self.comments = []
+            self.tests = []
 
             for test in tests:
-                self.comments.append(test)
-            #print(type(self.comments))
-           # print("TEST COMMENTS CONTENTS \n")
-           # print(self.comments)
+                self.tests.append(test)
 
-            #self.brake_fault_scanner()
+            self.fault_scanner_regex()
 
     # regex alternative implementation
     def fault_scanner_regex(self):
-        
+        # brake scan
+        brake_fault_regex = None
+        single_test = []
+        date_temp = ""
+
+        temp_list = set()
+
+        for test in self.tests:
+            temp_list.clear()
+            for k, v in test.items():
+                # get test date
+
+                if k == 'completedDate':
+                    date_temp = v
+
+                if k == 'rfrAndComments' and len(v) > 0:
+                    # access nested list of dicts containing comments
+                    for comment_set in v:
+
+                        for k1, v1 in comment_set.items():
+
+                            if k1 == 'text':
+                                check_brake_present = re.search('brake', v1, re.IGNORECASE)
+
+                                if check_brake_present:
+                                    for term in self.brakeFaultTerms:
+                                        brake_fault_regex = re.findall(term, v1, re.IGNORECASE)
+
+                                        if brake_fault_regex:
+                                            temp_list.add(v1)
+
+            temp_dict = {date_temp: temp_list.copy()}
+            self.brakeFaultsDetected.append(temp_dict)
+        pprint(self.brakeFaultsDetected)
+
+
+
+
+
+
+
+
 
     def brake_fault_scanner(self):
         #return

@@ -72,14 +72,9 @@ def start_main(key):
 
         if event == 'Submit':
             window.FindElement('_OUTPUT_').Update('')
-
-
             registration = values['_REG_']
             apidata = api_send(apikey, registration)
             vehicle = Vehicle(apidata)
-
-
-
 
             if vehicle.invalidReg == False:
                 window.Element('_MAKE_').Update(vehicle.make)
@@ -97,10 +92,17 @@ def start_main(key):
                 # FaultScanner test
                 # todo fix
 
-                if vehicle.faultScanner.faultDictList is None:
-                    print("No faults detected by FaultScanner !")
+                #if vehicle.faultScanner.faultDictList is None:
+                #    print("No faults detected by FaultScanner !")
 
-                print(vehicle.faultScanner.faultDictList)
+                if vehicle.faultScanner.brakeFaultsDetected is not None:
+                    print("Brake fault(s) detected. \n Terms found in test comments: ")
+                    #for fault in vehicle.faultScanner.brakeFaultsDetected:
+                    #    print(fault)
+
+                    # debug
+                    #print(vehicle.faultScanner.brakeFaultsDetected)
+
 
             if vehicle.motExpiry is not None:
                 window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
