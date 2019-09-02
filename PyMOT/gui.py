@@ -4,12 +4,13 @@
 import PySimpleGUI as sg
 
 from pprint import pprint
-from core import api_send
-from core import Vehicle
+import PyMOT.core as core
+from PyMOT.core import api_send
+from PyMOT.core import Vehicle
 
-import graphics
-from graphics import green_pill64
-from graphics import red_pill64
+import PyMOT.graphics as graphics
+from PyMOT.graphics import green_pill64
+from PyMOT.graphics import red_pill64
 import PyMOT.analysis as analysis
 
 # Window theme
@@ -53,10 +54,12 @@ def start_main(key):
         [sg.Frame(layout=[
 
             [sg.Text('Odometer check'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_ODOMETER_', font='Any 12', pad=(0,0)),
-             sg.Text('     Recurring faults'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_RECURRING_', font='Any 12', pad=(0,0)), ]]
+             sg.Text('     Recurring faults'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_RECURRING_', font='Any 12', pad=(0,0))],
 
+            # Safety issues button
+            [sg.Text('Safety issues'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_SAFETY_', font='Any 12', pad=(0, 0)),]]
 
-        , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
+            , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
 
         # Listbox / output
         [sg.Listbox(values=(''), size=(30, 15), key='_LIST_', enable_events=True),

@@ -1,11 +1,11 @@
 ## TODO move all analytics from core.py to this file
 
-from PyMOT.core import latest_results
+#from PyMOT.core import latest_results
 
 import re
 
 from pprint import pprint
-
+from datetime import datetime
 
 class FaultScanner():
 
@@ -68,6 +68,13 @@ class FaultScanner():
         single_test = []
         date_temp = ""
 
+        # placeholder so the scan loop can get started
+        default_date = '2100.01.01 00:00:00'
+        previous_date = datetime.strptime(default_date, '%Y.%m.%d %H:%M:%S').date()
+
+        delta = None
+        date_current = None
+
         temp_list = set()
 
         for test in self.tests:
@@ -76,7 +83,15 @@ class FaultScanner():
                 # get test date
 
                 if k == 'completedDate':
-                    date_temp = v
+                    completed_date = v
+
+                    #todo move retest check to GUI code
+                    #date_current = datetime.strptime(v, '%Y.%m.%d %H:%M:%S').date()
+                    #date_current = date_temp.date()
+                    # calc date delta for next if check
+                    #delta = (previous_date - date_current).days
+                    #print(delta)
+
 
                 if k == 'rfrAndComments' and len(v) > 0:
                     # access nested list of dicts containing comments
@@ -94,18 +109,17 @@ class FaultScanner():
                                         if brake_fault_regex:
                                             temp_list.add(v1)
 
-            temp_dict = {date_temp: temp_list.copy()}
-            self.brakeFaultsDetected.append(temp_dict)
+
+                # skips to next test (retest detected)
+
+
+                    previous_date = date_current
+
+                    temp_dict = {completed_date: temp_list.copy()}
+                    self.brakeFaultsDetected.append(temp_dict)
         pprint(self.brakeFaultsDetected)
 
-
-
-
-
-
-
-
-
+# obsolete
     def brake_fault_scanner(self):
         #return
 
