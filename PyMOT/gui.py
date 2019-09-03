@@ -3,6 +3,8 @@
 
 import PySimpleGUI as sg
 
+#print = sg.EasyPrint
+
 from pprint import pprint
 import PyMOT.core as core
 from PyMOT.core import api_send
@@ -36,7 +38,7 @@ def start_main(key):
         [sg.Text('Vehicle registration (e.g ZZ58 ABC)')],
         [sg.InputText('', key='_REG_', size=(18, 1), focus=True, tooltip='Enter vehicle registration here'), sg.Button('Submit', bind_return_key=True), sg.Button('Exit', key='_EXIT_')],
         [sg.Text('_' * 80)],
-
+        # Vehicle info
         [sg.Frame(layout=[
             [sg.Text('Make      '), sg.InputText('None', key='_MAKE_', disabled=True, size=(22,1)),
              # 4 space
@@ -50,14 +52,14 @@ def start_main(key):
 
             [sg.Text('Fuel Type'), sg.InputText('None', key='_FUELTYPE_', disabled=True, size=(22,1))]], title='Vehicle Information', title_color='red',
             relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
-
+        # Vehicle analysis elements
         [sg.Frame(layout=[
 
             [sg.Text('Odometer check'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_ODOMETER_', font='Any 12', pad=(0,0)),
              sg.Text('     Recurring faults'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_RECURRING_', font='Any 12', pad=(0,0))],
 
             # Safety issues button
-            [sg.Text('Safety issues'), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_SAFETY_', font='Any 12', pad=(0, 0)),]]
+            [sg.Text('Safety issues    '), sg.Button('OK', image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)), key='_SAFETY_', font='Any 12', pad=(0, 0)),]]
 
             , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
 
@@ -184,6 +186,14 @@ def start_main(key):
 
             test_output(selected)
 
+        # Safety issues element
+        if event == '_SAFETY_':
+            window.FindElement('_OUTPUT_').Update('')
+
+            safety_issues_output(vehicle.faultScanner.safetyFaultsDetected, vehicle.faultScanner.brakeFaultsDetected)
+
+
+
     window.Close()
 
 def mot_dates(tests):
@@ -237,3 +247,33 @@ def iterate_tests(target, tests):
             if k == 'completedDate' and v == target:
                 return test
 
+def safety_issues_output(safety, brakes):
+    # latest MOT only
+    safety_latest = safety[0]
+    brakes_latest = brakes[0]
+    print("Safety issues have been detected in the latest MOT for this vehicle. \n")
+    print("Advice: Repair these items immediately.\n --- If the braking system is mentioned below, have the vehicle serviced by a qualified mechanic as soon as possible.")
+    print("Safety issues in latest MOT: \n")
+    for k, v in safety_latest.items():
+        #access comment set
+        for comment in v:
+            if len(comment) > 0:
+                print("- - " + comment + "\n")
+
+    print("Braking system issues detected: \n ")
+    for k, v in brakes_latest.items():
+        #access comment set
+        for comment in v:
+            if len(comment) > 0:
+                print("- - " + comment + "\n")
+
+
+
+
+
+
+
+
+# todo place all gui tests in this method
+def output_test():
+    return None

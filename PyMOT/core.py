@@ -55,6 +55,7 @@ class Vehicle():
                 # analysis.py  ** FaultScanner activation **
                 self.faultScanner = analysis.FaultScanner(self.allTests)
 
+
             if 'motTests' not in activeVehicle.keys():
                 print("\n No MOT's recorded for this vehicle\n")
                 self.allTests = None

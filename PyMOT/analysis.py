@@ -16,6 +16,8 @@ class FaultScanner():
             self.brakeTermsDetected = set()
             self.brakeFaultsDetected = []
 
+            self.safetyFaultsDetected = []
+
             # comments to be scanned
             self.historicComments = {}
             self.latestComments = {}
@@ -48,7 +50,10 @@ class FaultScanner():
             ## TODO add button in interface, alert if within last two years
             self.criticalDamageTerms = ['excessively corroded', 'significantly reducing structural strength', 'bad oil leak',
                                         'severe oil leak', 'airbag', 'excessively deteriorated', 'juddering severely',
-                                        'structure corroded', 'chassis corroded', 'rigidity of the assembly is significantly reduced']
+                                        'structure corroded', 'chassis corroded', 'rigidity of the assembly is significantly reduced',
+                                        'engine management', 'EML', 'check engine', 'steering rack']
+
+            self.safetyFaultTerms = []
 
 
             # extracts comments from tests
@@ -75,10 +80,16 @@ class FaultScanner():
         delta = None
         date_current = None
 
-        temp_list = set()
+        completed_date = None
+
+        brake_temp = set()
+        critical_temp = set()
 
         for test in self.tests:
-            temp_list.clear()
+            # todo add new clear() for every temp list added
+            brake_temp.clear()
+            critical_temp.clear()
+
             for k, v in test.items():
                 # get test date
 
@@ -104,20 +115,31 @@ class FaultScanner():
 
                                 if check_brake_present:
                                     for term in self.brakeFaultTerms:
-                                        brake_fault_regex = re.findall(term, v1, re.IGNORECASE)
+                                        brake_fault_regex = re.findall(term, v1, flags=re.IGNORECASE)
 
                                         if brake_fault_regex:
-                                            temp_list.add(v1)
+                                            brake_temp.add(v1)
+
+                                # safety-critical scan
+                                for term in self.criticalDamageTerms:
+                                    critical_fault_regex = re.findall(term, v1, flags=re.IGNORECASE)
+
+                                    if critical_fault_regex:
+                                        critical_temp.add(v1)
 
 
-                # skips to next test (retest detected)
+                    # Store brake faults
+                    brake_temp_dict = {completed_date: brake_temp.copy()}
+                    self.brakeFaultsDetected.append(brake_temp_dict)
 
+                    # Store safety-critical faults
+                    critical_temp_dict = {completed_date: critical_temp.copy()}
+                    self.safetyFaultsDetected.append(critical_temp_dict)
 
-                    previous_date = date_current
+       # pprint(self.brakeFaultsDetected)
+       # print("Safety-critical items")
+        #pprint(self.safetyFaultsDetected)
 
-                    temp_dict = {completed_date: temp_list.copy()}
-                    self.brakeFaultsDetected.append(temp_dict)
-        pprint(self.brakeFaultsDetected)
 
 # obsolete
     def brake_fault_scanner(self):
