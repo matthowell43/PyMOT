@@ -1,5 +1,7 @@
 # PyMOT - a Python-based vehicle MOT checker
 
+## NOTE: PyMOT is in early stages of development - MOT history viewing is fully functional, but advanced features such as vehicle fault analysis is a work-in-progress.
+
 PyMOT is intended for UK car owners or prospective buyers who wish to examine a vehicle's MOT history in detail. It uses a DVSA API key to pull vehicle data from the DVSA servers which is then processed by this application. 
 
 The GUI is implemented via use of PySimpleGUI (Tkinter version).
