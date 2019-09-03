@@ -13,6 +13,8 @@ class FaultScanner():
 
         if tests is not None:
 
+            self.safetyIssues = False
+
             self.brakeTermsDetected = set()
             self.brakeFaultsDetected = []
 
@@ -65,6 +67,8 @@ class FaultScanner():
                 self.tests.append(test)
 
             self.fault_scanner_regex()
+
+            self.check_safety_issues()
 
     # regex alternative implementation
     def fault_scanner_regex(self):
@@ -136,10 +140,27 @@ class FaultScanner():
                     critical_temp_dict = {completed_date: critical_temp.copy()}
                     self.safetyFaultsDetected.append(critical_temp_dict)
 
+
+
        # pprint(self.brakeFaultsDetected)
        # print("Safety-critical items")
         #pprint(self.safetyFaultsDetected)
 
+    def check_safety_issues(self):
+        brakes_latest = self.brakeFaultsDetected[0]
+        safety_latest = self.safetyFaultsDetected[0]
+
+        for k, v in safety_latest.items():
+            #access comment set
+            for comment in v:
+                if len(comment) > 0:
+                    self.safetyIssues = True
+
+        for k, v in brakes_latest.items():
+            #access comment set
+            for comment in v:
+                if len(comment) > 0:
+                    self.safetyIssues = True
 
 # obsolete
     def brake_fault_scanner(self):

@@ -6,6 +6,9 @@ from datetime import datetime
 
 import PyMOT.analysis as analysis
 
+import PySimpleGUI as sg
+import PyMOT.gui as gui
+
 
 # Object creation- utilises data acquired from the MOT API to populate a Vehicle object with all relevant data.
 # Invokes numerous other methods.
@@ -55,6 +58,9 @@ class Vehicle():
                 # analysis.py  ** FaultScanner activation **
                 self.faultScanner = analysis.FaultScanner(self.allTests)
 
+
+                # test
+               # gui.Interface.window.FindElement('_MAKE_').Update(vehicle.make)
 
             if 'motTests' not in activeVehicle.keys():
                 print("\n No MOT's recorded for this vehicle\n")

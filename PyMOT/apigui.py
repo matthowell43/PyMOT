@@ -22,7 +22,7 @@ def start_api_gui():
             break
 
         if event == 'Submit':
-            gui.start_main(keyfile)
+            gui.Interface(keyfile)
             break
 
     window.Close()
