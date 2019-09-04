@@ -37,7 +37,7 @@ class Interface():
     # ------ Window Definition ------ #
         # todo find out if there's a more reliable way of aligning elements for this section (might be limitation of PySimpleGUI)
         global window
-        window = sg.Window('PyMOT 0.4.1', [
+        window = sg.Window('PyMOT 0.5.0', [
             [sg.Menu(menu_def, tearoff=True)],
 
             # Reg input
@@ -69,10 +69,10 @@ class Interface():
 
                 , title='Vehicle Analysis', title_color='red', relief=sg.RELIEF_SUNKEN)],
 
-            # Listbox / output
-            [sg.Listbox(values=(''), size=(30, 15), key='_LIST_', enable_events=True),
-             sg.Output(key='_OUTPUT_')]])
-
+            # Listbox / output multiline element
+            #todo enable keyboard navigation in listbox, (arrow > enter)
+            [sg.Listbox(values=(''), size=(20, 20), key='_LIST_', enable_events=True),
+             sg.Multiline('', size=(35, 20), key='_OUTPUT_', disabled=True, autoscroll=True, auto_size_text=True)]])
 
         # Event Loop
         while True:
@@ -146,6 +146,7 @@ class Interface():
                  #        '----- Suspension faults in latest MOT: ' + str(scanner.suspensionFaultsLatest))
 
             # Details upon clicking Odometer check button
+            # todo move odometer check code to new class method
             if event == '_ODOMETER_':
 
                 if vehicle.clockedCheck == False:
@@ -154,9 +155,10 @@ class Interface():
 
                     window.FindElement('_OUTPUT_').Update('')
 
-                    print('Odometer report: ALERT - Issues detected \n' )
-                    print('WARNING: Inconsistent odometer values have been detected.')
-                    print("This *might* indicate that the vehicle's odometer has been modified. \n")
+                    window.FindElement('_OUTPUT_').Update('Odometer report: ALERT - Issues detected \n', append=True)
+                    window.FindElement('_OUTPUT_').Update('WARNING: Inconsistent odometer values have been detected.', append=True)
+                    window.FindElement('_OUTPUT_').Update("This *might* indicate that the vehicle's odometer has been modified. \n", append=True)
+
 
                     odometerlist = []
                     datelist = []
@@ -169,13 +171,16 @@ class Interface():
                                 odometerlist.append(v)
 
                     for (date, odometer) in zip(datelist, odometerlist):
-                        print('Date: ' + date + " - Mileage: " + odometer + "\n")
+                        window.FindElement('_OUTPUT_').Update(
+                            'Date: ' + date + " - Mileage: " + odometer + "\n", append=True)
 
                 else:
                     window.FindElement('_OUTPUT_').Update('')
                     odometerlist = []
                     datelist = []
-                    print("Odometer report: No issues detected\n")
+                    window.FindElement('_OUTPUT_').Update(
+                        "Odometer report: No issues detected\n", append=True)
+
                     for test in vehicle.allTests:
 
                         for k, v in test.items():
@@ -185,7 +190,9 @@ class Interface():
                                 odometerlist.append(v)
 
                     for (date, odometer) in zip(datelist, odometerlist):
-                        print('Date: ' + date + " - Mileage: " + odometer + "\n")
+                        window.FindElement('_OUTPUT_').Update(
+                            'Date: ' + date + " - Mileage: " + odometer + "\n", append=True)
+
 
             # Display listbox selection in output box
             if event == '_LIST_' and len(values['_LIST_']):
@@ -236,19 +243,23 @@ class Interface():
                 for key1, value1 in resultsdict.items():
                     temp = []
                     if key1 == 'text':
-                        temp.append("Comment: " + value1)
+                        temp.append("[Comment] " + value1)
 
                     if key1 == 'type':
-                        temp.append("Type: " + value1)
+                        temp.append("\n[Type] " + value1)
 
                     for value in temp:
                         count = count + 1
                         # print adaption
-                        print(value)
+                        window.FindElement('_OUTPUT_').Update(
+                            value, append=True)
+
 
                     # line space after every comment/type set
                     if count & 2:
-                        print("\n")
+                        window.FindElement('_OUTPUT_').Update(
+                            "\n\n", append=True)
+
 
 
     def iterate_tests(self, target, tests):
@@ -263,24 +274,36 @@ class Interface():
         # latest MOT only
         safety_latest = safety[0]
         brakes_latest = brakes[0]
-        print("Safety issues have been detected in the latest MOT for this vehicle. \n")
-        print("Advice: Repair these items immediately.\n --- If the braking system is mentioned below, have the vehicle serviced by a qualified mechanic as soon as possible.")
-        print("Safety issues in latest MOT: \n")
+
+        window.FindElement('_OUTPUT_').Update(
+            "[Alert] Safety issues have been detected in the latest MOT for this vehicle. \n", append=True)
+
+        window.FindElement('_OUTPUT_').Update(
+            "[Advice] Repair these items immediately.\n --- If the braking system is mentioned below, have the vehicle serviced by a qualified mechanic as soon as possible.", append=True)
+
+        window.FindElement('_OUTPUT_').Update(
+            "Safety issues in latest MOT: \n", append=True)
+
         for k, v in safety_latest.items():
             #access comment set
             for comment in v:
                 if len(comment) > 0:
-                    print("- - " + comment + "\n")
 
-        print("Braking system issues detected: \n ")
+                    window.FindElement('_OUTPUT_').Update(
+                        "- - " + comment + "\n", append=True)
+
+        window.FindElement('_OUTPUT_').Update(
+            "Braking system issues detected: \n ", append=True)
+
+
         for k, v in brakes_latest.items():
             #access comment set
             for comment in v:
                 if len(comment) > 0:
                     print("- - " + comment + "\n")
 
-
-
+                    window.FindElement('_OUTPUT_').Update(
+                        "- - " + comment + "\n", append=True)
 
     # todo place all gui tests in this method
     def debug(self):

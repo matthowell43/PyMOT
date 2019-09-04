@@ -1,4 +1,4 @@
-# PyMOT - version 0.4.1, created by Matt Howell. Licensed under GPL 3.0. All rights reserved.
+# PyMOT - version 0.5.0, created by Matt Howell. Licensed under GPL 3.0. All rights reserved.
 
 import requests
 from pprint import pprint
@@ -20,6 +20,7 @@ class Vehicle():
         self.invalidReg = False
         self.motExpiry = None
         self.recurringFaultsPresent = False
+        self.clockedCheck = True
 
         if value is None:
             print('Invalid vehicle registration. Please try again.')
