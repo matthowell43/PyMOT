@@ -6,10 +6,6 @@ from datetime import datetime
 
 import PyMOT.analysis as analysis
 
-import PySimpleGUI as sg
-import PyMOT.gui as gui
-
-
 # Object creation- utilises data acquired from the MOT API to populate a Vehicle object with all relevant data.
 # Invokes numerous other methods.
 
@@ -21,6 +17,7 @@ class Vehicle():
         self.motExpiry = None
         self.recurringFaultsPresent = False
         self.clockedCheck = True
+        self.faultScanner = None
 
         if value is None:
             print('Invalid vehicle registration. Please try again.')
@@ -42,7 +39,7 @@ class Vehicle():
             if 'motTestExpiryDate' in activeVehicle.keys():
                 self.latestMileage = activeVehicle.get('motTestExpiryDate')
                 print(self.latestMileage)
-
+            # Invokes numerous methods listed in code later
             if 'motTests' in activeVehicle.keys():
                 self.allTests = activeVehicle['motTests']
                 #print(type(self.allTests))
@@ -149,26 +146,40 @@ def latestresults_format(comments):
 ## TODO Move all analysis methods to separate .py file
 def mileage_check(veh):
     # test values
-    #odometerValues = [102000, 99000, 81000, 91000, 83000, 70000]
+    #
 
     odometerValues = []
+
 
     for test in veh.allTests:
         for k, v in test.items():
             if k == 'odometerValue':
                 odometerValues.append(v)
 
+    if len(odometerValues) == 1:
+        return True
+
     # Convert string values to integers
     for i in range(len(odometerValues)):
         odometerValues[i] = int(odometerValues[i])
 
-    # Check if odometer values are only in descending order
-    for x in range(len(odometerValues) - 1):
-        if odometerValues[x] - odometerValues[x + 1] < 0:
-            return False
+    # test
 
-        else:
-            return True
+    #odometerValues = [102000, 79000, 51000, 175000, 124000, 70000, 24000]
+
+    # Check if odometer values are only in descending order
+    previous_value = odometerValues[0]
+    for value in odometerValues:
+        if value > previous_value:
+            return False
+        previous_value = value
+
+    return True
+
+    #for x in range(len(odometerValues) - 1):
+     #   if odometerValues[x] - odometerValues[x + 1] < 0:
+      #      return False
+
 
 
 # WIP

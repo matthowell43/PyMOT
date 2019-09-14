@@ -2,6 +2,7 @@
 # Icon made by itim2101 on www.flaticon.com (https://www.flaticon.com/free-icon/maintenance_1967734)
 
 import PySimpleGUI as sg
+import sys
 
 #print = sg.EasyPrint
 
@@ -82,6 +83,13 @@ class Interface():
               break
 
             if event == 'Submit':
+                # reset buttons
+                window.Element('_SAFETY_').Update('OK',
+                                                  image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)))
+
+
+                #pprint(sorted(sys.modules))
+
                 window.FindElement('_OUTPUT_').Update('')
                 registration = values['_REG_']
                 apidata = api_send(apikey, registration)
@@ -100,21 +108,6 @@ class Interface():
 
                     window.Element('_LIST_').Update(testdates)
 
-                    # FaultScanner test
-                    # todo fix
-
-                    #if vehicle.faultScanner.faultDictList is None:
-                    #    print("No faults detected by FaultScanner !")
-
-                    if vehicle.faultScanner.brakeFaultsDetected is not None:
-                        print("Brake fault(s) detected. \n Terms found in test comments: ")
-                        #for fault in vehicle.faultScanner.brakeFaultsDetected:
-                        #    print(fault)
-
-                        # debug
-                        #print(vehicle.faultScanner.brakeFaultsDetected)
-
-
                 if vehicle.motExpiry is not None:
                     window.Element('_EXPIRYDATE_').Update(vehicle.motExpiry)
 
@@ -130,8 +123,9 @@ class Interface():
                     window.Element('_ODOMETER_').Update('Alert',
                                                           image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
 
-                if vehicle.faultScanner.safetyIssues == True:
-                    window.Element('_SAFETY_').Update('Alert',
+                if vehicle.faultScanner is not None:
+                    if vehicle.faultScanner.safetyIssues == True:
+                        window.Element('_SAFETY_').Update('Alert',
                                                         image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
 
                 # todo run test method
@@ -155,8 +149,8 @@ class Interface():
 
                     window.FindElement('_OUTPUT_').Update('')
 
-                    window.FindElement('_OUTPUT_').Update('Odometer report: ALERT - Issues detected \n', append=True)
-                    window.FindElement('_OUTPUT_').Update('WARNING: Inconsistent odometer values have been detected.', append=True)
+                    window.FindElement('_OUTPUT_').Update('[Odometer report] Issues detected \n\n', append=True)
+                    window.FindElement('_OUTPUT_').Update('[WARNING] Inconsistent odometer values have been detected.', append=True)
                     window.FindElement('_OUTPUT_').Update("This *might* indicate that the vehicle's odometer has been modified. \n", append=True)
 
 
@@ -179,7 +173,7 @@ class Interface():
                     odometerlist = []
                     datelist = []
                     window.FindElement('_OUTPUT_').Update(
-                        "Odometer report: No issues detected\n", append=True)
+                        "[Odometer report] No issues detected\n\n", append=True)
 
                     for test in vehicle.allTests:
 
@@ -191,7 +185,7 @@ class Interface():
 
                     for (date, odometer) in zip(datelist, odometerlist):
                         window.FindElement('_OUTPUT_').Update(
-                            'Date: ' + date + " - Mileage: " + odometer + "\n", append=True)
+                            'Date: ' + date + " - Mileage: " + odometer + "\n\n", append=True)
 
 
             # Display listbox selection in output box
@@ -209,6 +203,11 @@ class Interface():
                 window.FindElement('_OUTPUT_').Update('')
 
                 self.safety_issues_output(vehicle.faultScanner.safetyFaultsDetected, vehicle.faultScanner.brakeFaultsDetected)
+
+            if event == '_RECURRING_':
+                window.FindElement('_OUTPUT_').Update('')
+                for value in vehicle.recurringFaults:
+                    window.FindElement('_OUTPUT_').Update(value + "\n\n", append=True)
 
 
 
@@ -231,9 +230,12 @@ class Interface():
         commentstemp = test['rfrAndComments']
 
         print("Recorded mileage for this MOT: " + test['odometerValue'] + "\n")
+        window.FindElement('_OUTPUT_').Update(
+            "Recorded mileage for this MOT: " + test['odometerValue'] + "\n\n", append=True)
 
         if len(commentstemp) == 0:
             print('Good news! No advisories or faults on this test.')
+            window.FindElement('_OUTPUT_').Update('Good news! No advisories or faults on this test.', append=True)
 
         else:
             for resultsdict in commentstemp:
@@ -276,13 +278,11 @@ class Interface():
         brakes_latest = brakes[0]
 
         window.FindElement('_OUTPUT_').Update(
-            "[Alert] Safety issues have been detected in the latest MOT for this vehicle. \n", append=True)
+            "[Alert] Safety issues have been detected in the latest MOT for this vehicle. \n\n", append=True)
 
         window.FindElement('_OUTPUT_').Update(
-            "[Advice] Repair these items immediately.\n --- If the braking system is mentioned below, have the vehicle serviced by a qualified mechanic as soon as possible.", append=True)
+            "[Advice] Repair these items as soon as possible.\n\n", append=True)
 
-        window.FindElement('_OUTPUT_').Update(
-            "Safety issues in latest MOT: \n", append=True)
 
         for k, v in safety_latest.items():
             #access comment set
@@ -292,8 +292,8 @@ class Interface():
                     window.FindElement('_OUTPUT_').Update(
                         "- - " + comment + "\n", append=True)
 
-        window.FindElement('_OUTPUT_').Update(
-            "Braking system issues detected: \n ", append=True)
+        #window.FindElement('_OUTPUT_').Update(
+        #    "Braking system issues detected: \n ", append=True)
 
 
         for k, v in brakes_latest.items():

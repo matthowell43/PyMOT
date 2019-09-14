@@ -53,7 +53,7 @@ class FaultScanner():
             self.criticalDamageTerms = ['excessively corroded', 'significantly reducing structural strength', 'bad oil leak',
                                         'severe oil leak', 'airbag', 'excessively deteriorated', 'juddering severely',
                                         'structure corroded', 'chassis corroded', 'rigidity of the assembly is significantly reduced',
-                                        'engine management', 'EML', 'check engine', 'steering rack']
+                                        'engine management', 'EML', 'check engine', 'steering rack', 'excessively worn']
 
             self.safetyFaultTerms = []
 
@@ -113,21 +113,17 @@ class FaultScanner():
                     for comment_set in v:
 
                         for k1, v1 in comment_set.items():
-
                             if k1 == 'text':
                                 check_brake_present = re.search('brake', v1, re.IGNORECASE)
-
                                 if check_brake_present:
                                     for term in self.brakeFaultTerms:
                                         brake_fault_regex = re.findall(term, v1, flags=re.IGNORECASE)
-
                                         if brake_fault_regex:
                                             brake_temp.add(v1)
 
                                 # safety-critical scan
                                 for term in self.criticalDamageTerms:
                                     critical_fault_regex = re.findall(term, v1, flags=re.IGNORECASE)
-
                                     if critical_fault_regex:
                                         critical_temp.add(v1)
 

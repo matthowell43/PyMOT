@@ -1,7 +1,5 @@
-import PySimpleGUI as sg
-from pprint import pprint
 import PyMOT.gui as gui
-
+import PySimpleGUI as sg
 # Icon made by itim2101 on www.flaticon.com (https://www.flaticon.com/free-icon/maintenance_1967734)
 
 def start_api_gui():
