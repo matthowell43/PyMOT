@@ -4,8 +4,6 @@
 import PySimpleGUI as sg
 import sys
 
-#print = sg.EasyPrint
-
 from pprint import pprint
 import PyMOT.core as core
 from PyMOT.core import api_send
@@ -86,8 +84,6 @@ class Interface():
                 # reset buttons
                 window.Element('_SAFETY_').Update('OK',
                                                   image_data=graphics.image_file_to_bytes(green_pill64, (80, 40)))
-
-
                 #pprint(sorted(sys.modules))
 
                 window.FindElement('_OUTPUT_').Update('')
@@ -127,17 +123,6 @@ class Interface():
                     if vehicle.faultScanner.safetyIssues == True:
                         window.Element('_SAFETY_').Update('Alert',
                                                         image_data=graphics.image_file_to_bytes(red_pill64, (80, 40)))
-
-                # todo run test method
-                #self.debug()
-
-                ## TODO add button in gui
-                #sg.Popup('Vehicle Report PLACEHOLDER - WIP', '',
-                #         'Total Brake faults detected: ' + str(scanner.brakeFaultsTotal),
-                 #        '----- Brake faults in latest MOT: ' + str(scanner.brakeFaultsLatest),
-                 #        '',
-                 #        'Total Suspension faults detected: ' + str(scanner.suspensionFaultsTotal),
-                 #        '----- Suspension faults in latest MOT: ' + str(scanner.suspensionFaultsLatest))
 
             # Details upon clicking Odometer check button
             # todo move odometer check code to new class method
@@ -208,13 +193,9 @@ class Interface():
                 window.FindElement('_OUTPUT_').Update('')
                 for value in vehicle.recurringFaults:
                     window.FindElement('_OUTPUT_').Update(value + "\n\n", append=True)
-
-
-
         window.Close()
 
     def mot_dates(self, tests):
-
         dates = []
         for test in tests:
             for k, v in test.items():
@@ -224,9 +205,7 @@ class Interface():
 
         return dates
 
-
     def test_output(self, test):
-
         commentstemp = test['rfrAndComments']
 
         print("Recorded mileage for this MOT: " + test['odometerValue'] + "\n")
@@ -239,7 +218,6 @@ class Interface():
 
         else:
             for resultsdict in commentstemp:
-
                 count = 0
 
                 for key1, value1 in resultsdict.items():
@@ -256,7 +234,6 @@ class Interface():
                         window.FindElement('_OUTPUT_').Update(
                             value, append=True)
 
-
                     # line space after every comment/type set
                     if count & 2:
                         window.FindElement('_OUTPUT_').Update(
@@ -265,14 +242,12 @@ class Interface():
 
 
     def iterate_tests(self, target, tests):
-
         for test in tests:
             for k, v in test.items():
                 if k == 'completedDate' and v == target:
                     return test
 
     def safety_issues_output(self, brakes, safety):
-
         # latest MOT only
         safety_latest = safety[0]
         brakes_latest = brakes[0]
@@ -283,7 +258,6 @@ class Interface():
         window.FindElement('_OUTPUT_').Update(
             "[Advice] Repair these items as soon as possible.\n\n", append=True)
 
-
         for k, v in safety_latest.items():
             #access comment set
             for comment in v:
@@ -291,10 +265,6 @@ class Interface():
 
                     window.FindElement('_OUTPUT_').Update(
                         "- - " + comment + "\n", append=True)
-
-        #window.FindElement('_OUTPUT_').Update(
-        #    "Braking system issues detected: \n ", append=True)
-
 
         for k, v in brakes_latest.items():
             #access comment set

@@ -1,9 +1,6 @@
 ## TODO move all analytics from core.py to this file
 
-#from PyMOT.core import latest_results
-
 import re
-
 from pprint import pprint
 from datetime import datetime
 
@@ -17,7 +14,6 @@ class FaultScanner():
 
             self.brakeTermsDetected = set()
             self.brakeFaultsDetected = []
-
             self.safetyFaultsDetected = []
 
             # comments to be scanned
@@ -57,9 +53,7 @@ class FaultScanner():
 
             self.safetyFaultTerms = []
 
-
             # extracts comments from tests
-
             self.latestCommentsRetrieved = False
             self.tests = []
 
@@ -107,7 +101,6 @@ class FaultScanner():
                     #delta = (previous_date - date_current).days
                     #print(delta)
 
-
                 if k == 'rfrAndComments' and len(v) > 0:
                     # access nested list of dicts containing comments
                     for comment_set in v:
@@ -136,12 +129,6 @@ class FaultScanner():
                     critical_temp_dict = {completed_date: critical_temp.copy()}
                     self.safetyFaultsDetected.append(critical_temp_dict)
 
-
-
-       # pprint(self.brakeFaultsDetected)
-       # print("Safety-critical items")
-        #pprint(self.safetyFaultsDetected)
-
     def check_safety_issues(self):
         brakes_latest = self.brakeFaultsDetected[0]
         safety_latest = self.safetyFaultsDetected[0]
@@ -158,7 +145,7 @@ class FaultScanner():
                 if len(comment) > 0:
                     self.safetyIssues = True
 
-# obsolete
+# obsolete, regex method used (above)
     def brake_fault_scanner(self):
         #return
 

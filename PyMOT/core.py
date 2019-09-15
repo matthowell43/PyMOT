@@ -9,7 +9,6 @@ import PyMOT.analysis as analysis
 # Object creation- utilises data acquired from the MOT API to populate a Vehicle object with all relevant data.
 # Invokes numerous other methods.
 
-
 class Vehicle():
 
     def __init__(self, value):
@@ -38,13 +37,10 @@ class Vehicle():
 
             if 'motTestExpiryDate' in activeVehicle.keys():
                 self.latestMileage = activeVehicle.get('motTestExpiryDate')
-                print(self.latestMileage)
+
             # Invokes numerous methods listed in code later
             if 'motTests' in activeVehicle.keys():
                 self.allTests = activeVehicle['motTests']
-                #print(type(self.allTests))
-                #print(self.allTests)
-
                 self.latestTest = next(iter(self.allTests))
                 self.latestResults = latest_results(self.latestTest)
                 self.firstUsedDate = get_first_used_date(activeVehicle)
@@ -56,10 +52,6 @@ class Vehicle():
                 # analysis.py  ** FaultScanner activation **
                 self.faultScanner = analysis.FaultScanner(self.allTests)
 
-
-                # test
-               # gui.Interface.window.FindElement('_MAKE_').Update(vehicle.make)
-
             if 'motTests' not in activeVehicle.keys():
                 print("\n No MOT's recorded for this vehicle\n")
                 self.allTests = None
@@ -68,13 +60,6 @@ class Vehicle():
 
             if len(self.recurringFaults) > 0:
                 self.recurringFaultsPresent = True
-
-            #tests
-            # pprint(activeVehicle)
-            #self.clockedCheck = True
-
-# TODO Complete later: If it exists, import any saved vehicles from saved_vehicles.csv
-
 
 
 def api_send(api_key: object, reg: object) -> object:
@@ -105,8 +90,8 @@ def get_first_used_date(veh):
         if k == 'firstUsedDate':
             return v
 
-def latest_results(test):
 
+def latest_results(test):
     results = []
 
     for k, v in test.items():
@@ -117,6 +102,7 @@ def latest_results(test):
                 results.append(v)
 
     return results
+
 
 def mot_expiry(veh):
     currentDate = datetime.now()
@@ -132,7 +118,6 @@ def mot_expiry(veh):
             return date
 
 # Methods to format test results for GUI display
-#fix
 
 def latestresults_format(comments):
     for comment in comments:
@@ -145,11 +130,7 @@ def latestresults_format(comments):
 # ---------------------------------------------------------
 ## TODO Move all analysis methods to separate .py file
 def mileage_check(veh):
-    # test values
-    #
-
     odometerValues = []
-
 
     for test in veh.allTests:
         for k, v in test.items():
@@ -163,8 +144,7 @@ def mileage_check(veh):
     for i in range(len(odometerValues)):
         odometerValues[i] = int(odometerValues[i])
 
-    # test
-
+    # test values
     #odometerValues = [102000, 79000, 51000, 175000, 124000, 70000, 24000]
 
     # Check if odometer values are only in descending order
@@ -175,12 +155,6 @@ def mileage_check(veh):
         previous_value = value
 
     return True
-
-    #for x in range(len(odometerValues) - 1):
-     #   if odometerValues[x] - odometerValues[x + 1] < 0:
-      #      return False
-
-
 
 # WIP
 def recurring_fault_check(tests):
